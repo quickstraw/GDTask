@@ -16,6 +16,8 @@ namespace Fractural.Tasks
         PhysicsProcess = 1,
         PauseProcess = 2,
         PausePhysicsProcess = 3,
+        CustomProcess = 4,
+        CustomPhysicsProcess = 5, 
     }
 
     public interface IPlayerLoopItem
@@ -101,18 +103,28 @@ namespace Fractural.Tasks
                 new ContinuationQueue(PlayerLoopTiming.PhysicsProcess),
                 new ContinuationQueue(PlayerLoopTiming.PauseProcess),
                 new ContinuationQueue(PlayerLoopTiming.PausePhysicsProcess),
+                new ContinuationQueue(PlayerLoopTiming.CustomProcess),
+                new ContinuationQueue(PlayerLoopTiming.CustomPhysicsProcess),
             };
             runners = new[] {
                 new PlayerLoopRunner(PlayerLoopTiming.Process),
                 new PlayerLoopRunner(PlayerLoopTiming.PhysicsProcess),
                 new PlayerLoopRunner(PlayerLoopTiming.PauseProcess),
                 new PlayerLoopRunner(PlayerLoopTiming.PausePhysicsProcess),
+                new PlayerLoopRunner(PlayerLoopTiming.CustomProcess),
+                new PlayerLoopRunner(PlayerLoopTiming.CustomPhysicsProcess),
             };
             processListener = new ProcessListener();
             AddChild(processListener);
             processListener.ProcessMode = ProcessModeEnum.Always;
             processListener.OnProcess += PauseProcess;
             processListener.OnPhysicsProcess += PausePhysicsProcess;
+        }
+
+        public void InitializeCustomLoop(ProcessListener listener)
+        {
+            listener.OnProcess += CustomProcess;
+            listener.OnPhysicsProcess += CustomPhysicsProcess;
         }
 
         public override void _Notification(int what)
@@ -153,6 +165,18 @@ namespace Fractural.Tasks
         {
             yielders[(int)PlayerLoopTiming.PausePhysicsProcess].Run();
             runners[(int)PlayerLoopTiming.PausePhysicsProcess].Run();
+        }
+        
+        private void CustomProcess(double delta)
+        {
+            yielders[(int)PlayerLoopTiming.CustomProcess].Run();
+            runners[(int)PlayerLoopTiming.CustomProcess].Run();
+        }
+        
+        private void CustomPhysicsProcess(double delta)
+        {
+            yielders[(int)PlayerLoopTiming.CustomPhysicsProcess].Run();
+            runners[(int)PlayerLoopTiming.CustomPhysicsProcess].Run();
         }
     }
 }

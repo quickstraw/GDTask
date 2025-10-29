@@ -101,6 +101,12 @@ namespace Fractural.Tasks.Internal
                 case PlayerLoopTiming.PauseProcess:
                     PauseProcess();
                     break;
+                case PlayerLoopTiming.CustomProcess:
+                    CustomProcess();
+                    break;
+                case PlayerLoopTiming.CustomPhysicsProcess:
+                    CustomPhysicsProcess();
+                    break;
             }
 #else
             RunCore();
@@ -111,6 +117,8 @@ namespace Fractural.Tasks.Internal
         void Process() => RunCore();
         void PausePhysicsProcess() => RunCore();
         void PauseProcess() => RunCore();
+        void CustomProcess() => RunCore();
+        void CustomPhysicsProcess() => RunCore();
 
         [System.Diagnostics.DebuggerHidden]
         void RunCore()
